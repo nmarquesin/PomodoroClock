@@ -4,6 +4,8 @@ $(document).ready(function(){
 
   var workMinutes = 25;
   var paused = true;
+  var progressValue = 0;
+  var totalTime = 25;
 
   function startTimer(duration, display) {
       paused = false;
@@ -23,16 +25,27 @@ $(document).ready(function(){
 
           $("#btnStop").click(function() {
             clearInterval(myTimer);
-            workMinutes = minutes + (seconds/60);
+            workMinutes = parseInt(minutes, 10) + parseInt(seconds, 10)/60;
+            console.log(workMinutes, "workMinutes", seconds, "seconds");
             paused = true;
           });
 
           $("#btnReset").click(function() {
             workMinutes = 25;
+            totalTime = 25;
             paused = true;
             $("#workTime").html(formatTime());
             clearInterval(myTimer);
           });
+
+          function updateProgress() {
+            var elapsedTime = -(parseInt(minutes, 10)*60 + parseInt(seconds, 10))+(totalTime*60);
+            progressValue = Math.floor((elapsedTime/(totalTime*60))*100);
+            console.log(progressValue, "% elapsed seconds: ", elapsedTime, "total minutes: ", totalTime);
+            return progressValue;
+          }
+
+          $("#progressBar").html('<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="'+updateProgress()+'" aria-valuemin="0" aria-valuemax="100" style="width: '+updateProgress()+'%;">'+updateProgress()+'%</div>');
 
       }, 1000);
 
@@ -53,8 +66,8 @@ $(document).ready(function(){
   $("#btnPlusWork").click(function() {
     if (workMinutes < 60 && paused === true) {
       workMinutes += 1;
+      totalTime += 1;
       console.log(workMinutes);
-      var countdownValue =
       $("#workTime").html(formatTime());
     }
   });
@@ -62,12 +75,13 @@ $(document).ready(function(){
   $("#btnMinusWork").click(function() {
     if (workMinutes > 5 && paused === true) {
       workMinutes -= 1;
+      totalTime -= 1;
       console.log(workMinutes);
       $("#workTime").html(formatTime());
     }
   });
 
-  function formatTime() {
+  function formatTime() {//this funciton needs work
     if (Math.floor((workMinutes-Math.floor(workMinutes))*60) > 9)
     {
       var formattedTime = Math.floor(workMinutes).toString()+":"+Math.floor((workMinutes-Math.floor(workMinutes))*60).toString();
