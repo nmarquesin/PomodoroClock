@@ -1,0 +1,15 @@
+div {
+  border-style: solid;
+  border-color: green;
+  border-width: thin;
+}
+.progress-bar {
+  border-style: solid;
+  border-color: orange;
+  border-width: thin;
+}
+#workTime {
+  font-size: 30px;
+  color: green;
+  text-align: right;
+}
